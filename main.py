@@ -39,10 +39,10 @@ df = pd.read_csv(DATA_SOURCE, low_memory=False)
 # Traducir dias de la semana y meses de inglés a español y agregarlos
 # como nuevas columnas al DataFrame
 df["release_date"] = pd.to_datetime(df["release_date"], format="%Y-%m-%d")
-df["month_release"] = df["release_date"].apply(
+df["release_month"] = df["release_date"].apply(
     lambda x: mes_es[x.strftime("%B")]
 )
-df["day_of_week_release"] = df["release_date"].apply(
+df["release_weekday"] = df["release_date"].apply(
     lambda x: dias_semana_es[x.strftime("%A")]
 )
 
@@ -58,8 +58,8 @@ def peliculas_mes(mes: str) -> dict:
     cantidad de películas estrenadas en ese período.
     """
 
-    df_mes = df[df["month_release"] == mes.capitalize()]
-    cantidad = len(df_mes)
+    df_mes = df[df["release_month"] == mes.capitalize()]
+    cantidad = df_mes.shape[0]
     return {
         "mes": mes,
         "cantidad": cantidad
@@ -79,8 +79,8 @@ def peliculas_dia(dia: str) -> dict:
     cantidad de películas estrenadas tal día históricamente.
     """
 
-    df_dia = df[df["day_of_week_release"] == dia.capitalize()]
-    cantidad = len(df_dia)
+    df_dia = df[df["release_weekday"] == dia.capitalize()]
+    cantidad = df_dia.shape[0]
     return {
         "dia": dia,
         "cantidad": cantidad
@@ -101,7 +101,7 @@ def franquicia(franquicia: str) -> dict:
     totales de dicha franquicia y las ganancias promedio de la misma.
     """
 
-    franquicia_df = df[df["belongs_to_collection"].apply(
+    franquicia_df = df[df["name_collection"].apply(
         lambda x: x is not None and x["name"] == franquicia
     )]
     cantidad = len(franquicia_df)
@@ -179,10 +179,10 @@ def retorno(pelicula: str) -> dict:
     """
 
     pelicula_df = df.loc[df["title"] == pelicula.title()]
-    inversion = pelicula_df["budget"].values[0].item()
-    ganancia = pelicula_df["revenue"].values[0].item()
-    retorno = pelicula_df["return"].values[0].item()
-    anio = pelicula_df["release_date"].dt.year.values[0].item()
+    inversion = pelicula_df["budget"].iloc[0].item()
+    ganancia = pelicula_df["revenue"].iloc[0].item()
+    retorno = pelicula_df["return"].iloc[0].item()
+    anio = pelicula_df["release_year"].iloc[0].item()
     return {
         "pelicula": pelicula,
         "inversion": inversion,

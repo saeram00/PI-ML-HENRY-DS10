@@ -22,3 +22,8 @@ There are 6 main functions in the API:
     - retorno: takes a movie name for an argument, and returns the investment cost,
     the earnings the movie produced, the net return of the movie and the year it was
     released.
+
+##### Links
+
+[Render](https://mod-pi-henry-ds10.onrender.com/docs)
+[Demo video](https://youtu.be/--X9etWFxIM)
